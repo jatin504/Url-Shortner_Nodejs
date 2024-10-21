@@ -3,10 +3,12 @@ const path = require('path')
 const app = express();
 const PORT = 4000;
 const { connectToMongoDb } = require("./config/connectDB");
-const urlRoute = require("./routes/url");
 const URL = require("./models/url");
-const staticRouter = require('./routes/staticRouter')
 
+//all routes
+const urlRoute = require("./routes/url");
+const staticRouter = require('./routes/staticRouter')
+const userRoute = require('./routes/user')
 
 connectToMongoDb("mongodb://127.0.0.1:27017/shortUrlProject").then(() =>
   console.log("Database Connect Successfully")
@@ -17,13 +19,13 @@ app.use(express.urlencoded({extended: false}))
 
 // set the view engine to ejs
 app.set('view engine', 'ejs');
-
 app.set('views', path.resolve("./views"))
 
 
 
 app.use("/url", urlRoute);
-app.use("/", staticRouter)
+app.use("/", staticRouter);
+app.use('/user',userRoute);
 
 app.get("/url/:shortId", async (req, res) => {
   const shortId = req.params.shortId;
